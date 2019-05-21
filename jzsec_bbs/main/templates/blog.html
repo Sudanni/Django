@@ -1,0 +1,48 @@
+{% extends 'entry_jzsec.html' %}
+{% block title %}<title>帖子</title>{% endblock %}
+{% block content %}
+<style type="text/css">
+	.btn_right{
+		width: 60;
+		/*height: 20;
+		background: black;*/
+		float:right;
+	}
+</style>
+<style type="text/css">
+	/* 只显示一行，省略的内容用...*/
+	.display_one{
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 1;
+		overflow: hidden;
+	}
+</style>
+{% if request.user.is_authenticated %}
+<div class="container container-fluid jumbotron">
+	<h4><button class="btn btn-primary btn_right"><a href="/blog/create/" style="color:black">写帖子</a></button></h4>
+	<h1 style="color:green">有趣的帖子：	</h1>
+	<br>
+	{% for blog in blogs %}
+	<article class="article">
+		<h2><a href="#0"><b>{{ blog.name }}</b></a></h2>{% load extras_info %}
+		<p class="small text-secondary" >发表于 {{ blog.create_at | datetime }} &nbsp;{{ blog.user_name }}</p>
+		<h5><p class="text-secondary display_one">{{ blog.content |linebreaksbr }}</p></h5>
+		<p><a href="/blog/{{ blog.blog_id }}">继续阅读 <i class="uk-icon-angle-double-right"></i></a></p>
+
+	</article>
+	<hr class="article-divider">
+	{% endfor %}
+</div>
+{% include "page_list.html" with page=blogs %}
+{% else %}
+<div class="container container-center jumbotron">
+  <div class="col-sm-4 col-sm-offset-4">
+    <div id="app" class="form-group">
+      <h3 style="color:green"><a href="/accounts/login/" >请您登陆获取更多内容</a></h3><br>
+      <!--<h4><button class="btn btn-primary"><a href="/accounts/login/" style="color:black">登录</a></button></h4>-->
+  </div>
+</div>
+{% endif%}
+{% endblock content %}
+

@@ -1,0 +1,92 @@
+{% extends 'entry_jzsec.html' %}
+<!--block模块是修改继承html中的元素内容-->
+{% block title %}<title>个人信息修改</title>{% endblock %}
+{% block content%}
+<h2>
+	<script language="JavaScript">
+	for (var i=1; i<= 40; i++)
+	{
+		document.write ("&nbsp;")
+	}
+	</script>
+	<a href="http://fund.eastmoney.com/">广告：如何通过购买基金理财</a>
+</h2>
+
+<div class="container container-fluid jumbotron">
+    <div id="app" class="form-group">
+      <!--p class="form-control" v-text="text"></p>
+      <span>我还没明白“span”:</span>
+      <input class="form-control" v-model="text"-->
+      <table class="table table-hover form-group"  rules="none">
+      	<thead>
+      		<tr class="form-group">
+      			<th>编号</th>
+      			<th>项目</th>
+      			<th>内容</th>
+      		</tr>
+      	</thead>
+      	<tbody>
+      		<tr>
+      			<td>0</td>
+      			<td>账户(不可改)</td>
+      			<td><span style="color:red" v-text="email" class="form-control"></span></td>
+      		</tr>
+      		<tr>
+      			<td>1</td>
+      			<td>姓名</td>
+      			<td><input style="color:green" v-model="name" class="form-control"></td>
+      		</tr>
+      		<tr>
+      			<td>2</td>
+      			<td>工作</td>
+      			<td><input v-model="job" class="form-control"></td>
+      		</tr>
+      	</tbody>
+      </table>
+	  <button @click="submit" class="btn btn-primary">保存修改</button> &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary "><a href="/blog/" style="color:white">进入首页</a></button>
+    </div>
+
+</div>
+{% endblock %}
+{% block vuejs %}
+<script type="text/javascript">
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      email: '{{ request.user.email}}',
+      name: '{{ request.user.name}}',
+      job: '{{ request.user.job}}',
+    },
+    methods: {
+    	submit(){
+    		data_to_send = {
+    			email: this.email,
+    			name: this.name,
+    			job: this.job,
+
+    		};
+    		console.log(data_to_send);
+    		//转为json串
+    		data_to_send = JSON.stringify(data_to_send);
+    		console.log(data_to_send);
+
+    		$.post('/accounts/profile/',data_to_send,function(r,returninfo){
+    			if(returninfo === 'success'){
+    				alert('修改已保存');
+    				//return location.reload(true);
+    				return location.assign('/');
+    			}else{
+    				return console.log(err);
+    			}
+    		});
+
+    		//$.get('accounts_profile.html');
+    		//刷新页面
+    		//window.location.reload();
+    		},
+    	
+    },
+
+  });
+</script>
+{% endblock %}

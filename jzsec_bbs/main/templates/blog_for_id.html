@@ -1,0 +1,71 @@
+{% extends 'entry_jzsec.html' %}
+{% block title %}<title>blog{{ blog_id }}</title>{% endblock %}
+{% block content %}
+<style type="text/css">
+	.btn_right{
+		width: 60;
+		/*height: 20;
+		background: black;*/
+		float:right;
+	}
+	#align *{ 
+		vertical-align:middle; /* 居中对齐， */ 
+		/*font-size:14px; */
+} 
+</style>
+
+{% if request.user.is_authenticated %}
+<div class="container container-fluid jumbotron">
+	<h4><button class="btn btn-primary btn_right"><a href="/blog/create/" style="color:black">再发一帖</a></button></h4>
+	<h1 style="color:green">有趣的帖子：	</h1>
+	<br>	
+	<article class="article">
+		<h2><a href="#0"><b>{{ blog_for_id.name }}</b></a></h2>{% load extras_info %}
+		<p class="small text-secondary" >发表于 {{ blog_for_id.create_at | datetime }} &nbsp;{{ blog.user_name }}</p>
+		<h5><p class="text-secondary">{{ blog_for_id.content }}</p></h5>
+	</article> 
+	<hr class="article-divider"><br>
+	<h3 style="color: blue">评论区</h3>
+	{% for comment in blog_for_id.to_blog_id.all %}	
+	<div class="comment ">
+		<div class="content" id="align">
+			<img src="/static/img/jzsec.jpg" alt="user_head_img">
+			<a href="#" class="author">{{ comment.comment_user.name }}</a>  
+			<span>{{ comment.create_at}}</span>
+			<p class="text" style="font-family: 'Releway',sans-serif">
+				{{ comment.content }}
+			</p>	
+			<p class="text" style="font-family: 'Releway',sans-serif;color: red;">
+				回复
+			</p>
+		</div>
+	</div>
+	{% endfor %}
+	<form  action="{% url 'comment' blog_id %}" method="post" name="comment">
+  		{% if form.errors %}
+  		<p>报错了。。。。。。。。。。。。。。。。。</p>
+  		<div class="ui error message"> {{ form.errors }}</div>
+  		{% else %}
+
+  			<input style="color:green"  name="content" class="form-control" required="required" value="{{ form.content }}"><br>
+  			
+  		{% endif %}
+  		{% csrf_token %}
+  		<div class="align" id="align">
+  			<button type="submit" class="ui red button" >提交评论</button> 
+  			<h3 class="btn_right"><a href="/blog/">返回</a> </h3>
+  		</div>
+	</form>
+	
+</div>
+{% else %}
+<div class="container container-center jumbotron">
+  <div class="col-sm-4 col-sm-offset-4">
+    <div id="app" class="form-group">
+      <h3 style="color:green"><a href="/accounts/login/" >请您登陆获取更多内容</a></h3><br>
+      <!--<h4><button class="btn btn-primary"><a href="/accounts/login/" style="color:black">登录</a></button></h4>-->
+  </div>
+</div>
+
+{% endif%}
+{% endblock content %}
