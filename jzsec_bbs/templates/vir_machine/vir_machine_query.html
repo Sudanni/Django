@@ -1,0 +1,24 @@
+{% extends "vir_machine.html" %}
+
+{% block div %}
+<div class="toolbar table-toolbar" id="align">	
+	<div class="form-search" >
+		<form action="/vir_list/query/?" method="GET">
+			<a class="btn btn-primary" href="/vir_list/"><span class="text">刷新</span></a>
+			<button type="submit" class="btn btn-primary" style="color: yellow"><span class="text">搜索</span></button>
+			<input type="search" placeholder=" " name="vir_ip" value={{ vir_ip }} style="color: grey">
+			<input type="search" placeholder=" " name="phy_name" value={{ phy_name}}  style="color: grey">
+		</form>
+	</div>
+	<div class="pagination" >
+		<span class="pages">合计 : {{ vir_machine_count }}&nbsp;&nbsp;</span>
+		<span class="per-page">每页{{ page_count }}</span>
+		<!--<div class="select-con">
+			<select class="dropdown-select" name="limit">
+				<option value="10">10</option><option value="20">20</option>
+				<option value="50">50</option><option value="100" selected="">100</option>
+			</select>
+	</div>-->
+	</div>
+</div>
+{% endblock %}

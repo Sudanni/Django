@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% block title %}
+  <title>九州配置管理</title>
+  {% endblock title %}
+  <link href="/static/img/favicon.ico" rel="shortcut icon">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/static/js/jzsec_public.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+  <link href="/static/css/jzsec_console.css" rel="stylesheet" type="text/css">
+  
+  <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <script src="http://v3.bootcss.com/assets/js/ie-emulation-modes-warning.js"></script>
+  <script src="http://v3.bootcss.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+  <!--csrf token-->
+  <script type="text/javascript" src="/static/js/csrf.js"></script>
+  <!--vue-->
+  <script src="/static/js/vue.js"></script>
+ 
+  <style type="text/css">
+    
+    div#navsecond {
+    float: left;
+    margin: 0 0 0 0px;
+    padding: 0;
+    border: 0;
+    width: 120px;
+    background: transparent;
+        }
+  .btn_right{
+    width: 60;
+    /*height: 20;
+    background: black;*/
+    float:right;
+  }
+  </style>
+  <style type="text/css">
+    .btn_size{
+      width:100;
+      height: 20;
+    }
+  </style>
+  <style type="text/css">
+  .btn_right{
+    width: 60;
+    /*height: 20;
+    background: black;*/
+    float:right;
+  }
+  #align *{ 
+    vertical-align:middle; /* 居中对齐， */ 
+    /*font-size:14px; */
+    margin: 0 0 0 4px;
+    display:inline-block;
+
+} 
+  #margin *{
+        margin: 0 0 0 4px;
+  }
+</style>
+<style type="text/css">
+
+div.overflow{
+  overflow:scroll;
+}
+ul.app_link a{
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #151515;
+    transition-delay: 0s;
+    transition-duration: 0.36s;
+    transition-property: all;
+}
+
+
+
+
+table.hovertable {
+    font-family: verdana,arial,sans-serif;
+    font-size:11px;
+    color:#333333;
+    border-width: 1px;
+    border-color: #999999;
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-break: break-all; 
+    word-wrap: break-word;
+}
+table.hovertable th {
+    background-color:#c3dde0;
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #a9c6c9;
+}
+table.hovertable tr {
+    background-color:#d4e3e5;
+}
+table.hovertable td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #a9c6c9;
+}
+</style>
+ <style type="text/css">
+  .btn_right{
+    width: 60;
+    /*height: 20;
+    background: black;*/
+    float:right;
+  }
+
+
+ </style>
+
+</head>
+<body>
+<div id="navfirst">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <!-- Brand -->
+  <a class="navbar-brand" href="#">
+   <img src="/static/img/jzsec.jpg" alt="logo" style="width: 40px;">
+  </a>
+
+  <!-- Links -->
+  <ul class="navbar-nav">
+    <li class="nav-item" >
+      <a class="nav-link" href="/blog/">论坛交流</a>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+        服务器
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="#">物理机</a>
+        <a class="dropdown-item" href="/vir_list/">虚拟机</a>
+        <a class="dropdown-item" href="machine_room.html">机房机柜展示</a>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">网络设备</a>
+    </li>
+        <li class="nav-item">
+      <a class="nav-link" href="#">网络线路</a>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+        应用系统
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="/sys_display/">版本库</a>
+        <a class="dropdown-item" href="#">应用子系统</a>
+        <a class="dropdown-item" href="#">应用系统主机</a>
+        <a class="dropdown-item" href="#">待定</a>
+      </div>
+    </li>   
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+        快捷链接
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="/admin/">后台管理</a>
+        <a class="dropdown-item" href="#">功能2</a>
+        <a class="dropdown-item" href="#">功能3</a>
+      </div>
+    </li>
+    {% if request.user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" href="/">当前用户：{{ request.user.name }}</a>
+    </li>
+    <!-- Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+        个人中心
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="/admin/users/user/">定制工具</a>
+        <a class="dropdown-item" href="/accounts/profile/">修改个人信息</a>
+        <a class="dropdown-item" href="/accounts/logout/">登出</a>
+      </div>
+    </li>
+    {% else %}
+    <li class="nav-item"><a class="nav-link" href="/accounts/login/">登录 </a></li>
+    <li class="nav-item"><a class="nav-link" href="/accounts/register/">注册 </a></li>
+    {% endif %}
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <h4><li class="nav-item btn_right" style="color: white"><span id="navbar_time"> </span></li></h4>
+    <script type="text/javascript">
+    setInterval(getlocaltime, 1000);
+    function getlocaltime() {
+        var localtime = new Date();
+        var yy = localtime.getFullYear();
+        var mo = localtime.getMonth()+1;
+        var dd = localtime.getDate();
+        var hh = localtime.getHours();
+        var mm = localtime.getMinutes();
+        var ss = localtime.getSeconds();
+
+        mm = extra(mm);
+        ss = extra(ss);
+
+        document.getElementById("navbar_time").innerHTML = yy+"年"+mo+"月"+dd+"日"+"   "+hh+":"+mm+":"+ss;
+        }
+    function extra(x) {
+        if(x < 10){
+            return "0" + x;
+        }else{
+            return x;
+        }
+    }
+    </script>
+
+  </ul>
+</nav>
+<div/>
+{% block div %}
+
+{% endblock %}
+{% block content %}
+<div class="container container-center jumbotron">
+  <div class="col-sm-4 col-sm-offset-4">
+    <div id="app" class="form-group">
+      <h3 style="color:green">九州配置管理系统</h3>
+      <!--<span class="form-control" v-text="info"></span>-->
+      <br>
+      <span>请输入你的姓名:</span>
+      <input class="form-control" v-model="name">
+      <br>
+      <h3 style="color:green"><a href="/blog/">进入系统</a></h3>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      info: '最具权威的大咖',
+      name: '{{ request.user.name}}',
+    }
+  })
+</script>
+{% endblock %}
+</body>
+</html>

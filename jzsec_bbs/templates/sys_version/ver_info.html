@@ -1,0 +1,138 @@
+{% extends 'entry_jzsec.html' %}
+{% block title %}<title>版本库信息</title>{% endblock %}
+{% block div %}
+	{% include 'sys_version/secondnav.html'%}
+{% endblock %}
+{% block content %}
+{% if request.user.is_authenticated %}
+
+<style type="text/css">
+
+
+	.first{
+    float:left;
+    width:200px;
+    height:100px;
+    border:1px #333 solid;
+    margin:20px;
+    border-radius:5px;/*圆角*/
+    background: green;
+    }
+    .second{
+    float:left;
+    width:200px;
+    height:100px;
+    border:1px #333 solid;
+    margin:20px;
+    border-radius:5px;/*圆角*/
+    background: yellow;	
+    }
+
+    h1 {
+   	color:black;
+    font-weight:bold;
+    line-height:50px;
+    font-family:"STXinwei";
+    text-align: center;
+
+    }
+    .first p{
+    color:white;
+    font-size:20px;
+    font-weight:bold;
+    line-height:10px;
+    font-family:"STXinwei";
+    text-align: center;	
+    }
+    .second p{
+    color:red;
+    font-size:20px;
+    font-weight:bold;
+    line-height:10px;
+    font-family:"STXinwei";
+    text-align: center;	
+    }
+    #oa_switch {
+    background: yellow;
+    }
+
+    a:link{ text-decoration:none;} 
+
+</style>
+<script type="text/javascript">
+	function add() {
+    	var len = $(".main").length + 1;
+    	alert("为什么呢");
+    	var divId = "d" + len;
+    	var inputId = "input" + len;
+    	$(".main").append("<div id=" + divId + " class='first'><a id='sys"+len+"url'><h1 id='sys"+len+"'><input type='text' style='border:0px;background:none;' id=" + inputId + " value='填写系统'></h1></a></div>");
+    	//$(".main").prepend("<div id=" + divId + " class='first'><input type='text' id=" + inputId + "></div>");
+};
+ 
+	/*$(".del").click(function() {
+    var len = $(".main").children().length;
+    $(".main").children().eq(len-1).remove(); 
+	})*/
+	/*$(document).ready(function(){
+		$("a").click(function(){
+			var sys_name = $(this).children("h1").text();
+			var url = "/ver_monitor/query?sys_name=" + {{ item.0 }};
+			var data = {'href':url};
+			$(this).attr(data);
+		})
+});*/
+	
+</script>
+<br>
+
+<div class="main">
+	<div class=" btn_right">
+		<input type="button" class="add btn-primary btn" value="添加系统" onclick="add()">
+	</div>
+	{% for item in ver_monitor_list %}
+	{% if item.4 == item.6 %}
+	<div class="first" id='{{ item.0 }}'>
+		<a id="sys_url" href="/ver_monitor/query?sys_name={{ item.0 }}"><h1 id='sys_name'>{{ item.0 }}</h1></a>
+		<p>状态:正常</p>
+	</div>
+	{% else %}
+		<div class="second" id='{{ item.0 }}'>
+		<a id="sys_url" href="/ver_monitor/query?sys_name={{ item.0 }}"><h1 id='sys_name'>{{ item.0 }}</h1></a>
+		<p>状态:异常</p>
+	</div>
+	{% endif %}
+	<!--<div class="first">	<a id="sys_url2"><h1 id='sys_name2'>监控</h1></a>
+		<script type="text/javascript"> 
+		$(function(){
+			var sys_name = $("#sys_name2");
+			var url = "/ver_monitor/query?sys_name=" + sys_name.text();
+			var data = {'href':url};
+			$("#sys_url2").attr(data);
+		});
+		
+		</script>
+		<p>状态:{{ status }}</p>
+	</div>
+	<div class="first">	<a id="sys_url"><h1 id='sys_name'>投行</h1></a>
+		<p>状态:{{ status }}</p></div>
+	<div class="first">	<a id="sys_url"><h1 id='sys_name'>OA系统</h1></a>
+		<p>状态:{{ status }}</p></div>
+	<div class="first">	<a id="sys_url"><h1 id='sys_name'>OA系统</h1></a>
+		<p>状态:{{ status }}</p></div>	
+	<div class="first">	<a id="sys_url"><h1 id='sys_name'>OA系统</h1></a>
+		<p>状态:{{ status }}</p></div>
+	<div class="first">	<a href="#"><h1>OA系统</h1></a>
+		<p>状态:{{ status }}</p></div>-->
+</div>	
+{% endfor %}
+{% else %}
+<div class="container container-center jumbotron">
+  <div class="col-sm-4 col-sm-offset-4">
+    <div id="app" class="form-group">
+      <h3 style="color:green"><a href="/accounts/login/" >请您登陆获取更多内容</a></h3><br>
+      <!--<h4><button class="btn btn-primary"><a href="/accounts/login/" style="color:black">登录</a></button></h4>-->
+  </div>
+</div>
+
+{% endif%}
+{% endblock %}

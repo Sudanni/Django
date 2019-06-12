@@ -21,7 +21,7 @@
 {% if request.user.is_authenticated %}
 <div class="container container-fluid jumbotron">
 	<h4><button class="btn btn-primary btn_right"><a href="/blog/create/" style="color:black">写帖子</a></button></h4>
-	<h1 style="color:green">有趣的帖子：	</h1>
+	<h1 style="color:green">发起需求进行讨论：</h1>
 	<br>
 	{% for blog in blogs %}
 	<article class="article">

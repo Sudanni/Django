@@ -3,6 +3,8 @@ import json
 from users.models import User
 from .models import *
 from .form import *
+
+
 #导入分页模块
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.http import HttpResponseRedirect
@@ -25,7 +27,7 @@ def accounts_profile(request):
         info_user.job = info['job']
         info_user.save()
 
-    return render(request, 'accounts_profile.html')
+    return render(request, 'main/accounts_profile.html')
 #帖子
 def blog(request):
     blog_info = Blog.objects.all().order_by('-blog_id')
@@ -40,13 +42,13 @@ def blog(request):
     except EmptyPage:
         #if page is out of range deliver last page or results
         pages = pagenator.page(pagenator.num_pages)
-    return render(request,'blog.html',{'blogs':pages,'page':page})
+    return render(request,'main/blog.html',{'blogs':pages,'page':page})
 
 #写帖子
 def create_blog(request):
     blog_id = Blog.objects.all().count() + 1
     if request.method == 'GET':
-        return render(request, 'create_blog.html',{"blog_id":blog_id})
+        return render(request, 'main/create_blog.html',{"blog_id":blog_id})
     elif request.method == 'POST':
         #form = Blog(request.POST)
         #global blog_id
@@ -66,7 +68,7 @@ def create_blog(request):
     #return render(request, 'create_blog.html')
 
 def create_ok(request):
-    return render(request,'createok.html')
+    return render(request,'main/createok.html')
 
 def blog_for_id(request,blog_id):
     if request.method == 'GET':
@@ -76,7 +78,7 @@ def blog_for_id(request,blog_id):
     #result = cursor.fetchone()
         blog_for_id = Blog.objects.get(blog_id=blog_id)
 
-        return render(request,'blog_for_id.html',{"blog_for_id":blog_for_id,"blog_id":blog_id})
+        return render(request,'main/blog_for_id.html',{"blog_for_id":blog_for_id,"blog_id":blog_id})
     if request.method == 'POST':
         form = DiscussForm(request.POST)
         if form.is_valid():
@@ -89,4 +91,6 @@ def blog_for_id(request,blog_id):
             redirect_url = "/blog/"+blog_id
             return HttpResponseRedirect(redirect_url,{"form":form})
         return HttpResponseRedirect("/blog/"+blog_id)
+def developing(request):
+     return render(request,'sys_version/developing.html')
 

@@ -2,8 +2,8 @@ from django.db import models
 import datetime
 import time
 from users.models import User
+from django.conf import settings
 # Create your models here.
-
 #获取当前时间戳
 dtime = datetime.datetime.now()
 un_time = int(time.mktime(dtime.timetuple()))

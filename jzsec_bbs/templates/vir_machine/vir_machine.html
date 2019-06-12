@@ -1,0 +1,233 @@
+{% extends 'entry_jzsec.html' %}
+{% block title %}<title>虚拟机列表</title>{% endblock %}
+{% block content %}
+<br>
+{% if request.user.is_authenticated %}
+<style type="text/css">
+
+div.overflow{
+	overflow:scroll;
+}
+
+
+table.hovertable {
+    font-family: verdana,arial,sans-serif;
+    font-size:11px;
+    color:#333333;
+    border-width: 1px;
+    border-color: #999999;
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-break: break-all; 
+    word-wrap: break-word;
+}
+table.hovertable th {
+    background-color:#c3dde0;
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #a9c6c9;
+}
+table.hovertable tr {
+    background-color:#d4e3e5;
+}
+table.hovertable td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #a9c6c9;
+}
+</style>
+ <style type="text/css">
+  .btn_right{
+    width: 60;
+    /*height: 20;
+    background: black;*/
+    float:right;
+  }
+ </style>
+<script type="text/javascript">
+    //checkbox 全选/取消全选
+    var isCheckAll = false;
+    function swapCheck() {
+      if (isCheckAll) {
+        $("input[type='checkbox']").each(function() {
+          this.checked = false;
+        });
+        isCheckAll = false;
+      } else {
+        $("input[type='checkbox']").each(function() {
+          this.checked = true;
+        });
+        isCheckAll = true;
+      }
+    }
+    function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+// Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        //导出
+function downData() {
+            var env_codes = new Array();
+            var count = 0;
+            var i = 0;
+            $("input[type='checkbox']:checked").each(function () {
+                env_code = $(this).parent().next().text();
+                //alert(env_code);
+                if (env_code != "") {
+                    env_codes[i++] = env_code;
+                }
+                count++;
+            });
+            if (count == 0) {
+            	alert('请选中导出项！');
+            	return false;
+            }
+            $("#downData").val(env_codes)
+            var project_code = $("#downData").val()
+            //alert(project_code);
+            $.ajax({
+                type: 'POST',
+                url: '/vir_list/process_export_excel/',
+                dataType: 'text',
+                data: {'project_code': project_code},
+                beforeSend: function (xhr, settings) {
+                    var csrftoken = getCookie('csrftoken');
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function (text) {
+                    var url = '/vir_list/download/' + text;
+                    window.location.href = url;
+                },
+                error: function () {
+                    alert('导出失败');
+                }
+            });
+
+        }
+
+        
+</script>
+
+<div class="toolbar table-toolbar" id="align">	
+	<div class="form-search" >
+		<form action="/vir_list/query/?" method="GET">
+			<a class="btn btn-primary" href="/vir_list/"><span class="text">刷新</span></a>
+			<button type="submit" class="btn btn-primary" style="color: yellow"><span class="text">搜索</span></button>
+			<span class="text">虚拟机IP:</span><input type="search" placeholder=" " name="vir_ip" value="{{ vir_ip}}" style="color: grey">
+			<span class="text">物理机名称 :</span><input type="search" placeholder=" " name="phy_name" value="{{ phy_name }}" style="color: grey">
+		</form>
+	</div>
+	<div class="pagination" >
+		<span class="pages">合计 : {{ vir_machine_count }}&nbsp;&nbsp;</span>
+		<span class="per-page">每页{{ page_count }}</span>
+		<!--<div class="select-con">
+			<select class="dropdown-select" name="limit">
+				<option value="10">10</option><option value="20">20</option>
+				<option value="50">50</option><option value="100" selected="">100</option>
+			</select>
+	</div>-->
+	</div>
+	<div class="toolbar table-toolbar btn_right">
+		<input id="downData" type="text" name="project_code" style="display:none"/>
+        <button id="export" type="onclick" class="btn-primary btn btn_right" onclick="downData();">
+            <span class="" aria-hidden="true"></span>导出数据
+        </button>
+	</div>
+</div>
+<div class="toolbar table-toolbar overflow">
+ <table class="table table-hover form-group hovertable" vcontext="subusers.table" id="tableSort">
+   <thead>
+    <tr>
+     <th class="checkbox" width="50"><input type="checkbox" onclick="swapCheck()" /></th>
+     <th onclick="$.sortTables.sort('tableSort',1)" style="cursor: pointer;">虚拟机ID</th>
+     <th onclick="$.sortTables.sort('tableSort',2)" style="cursor: pointer;">虚拟机名称</th>
+     <th onclick="$.sortTables.sort('tableSort',3)" style="cursor: pointer;">虚拟机IP</th>
+     <th onclick="$.sortTables.sort('tableSort',4)" style="cursor: pointer;">系统名称</th>
+     <th onclick="$.sortTables.sort('tableSort',5)" style="cursor: pointer;">物理机名称</th>
+     <th onclick="$.sortTables.sort('tableSort',6)" style="cursor: pointer;">镜像名称</th>
+     <th onclick="$.sortTables.sort('tableSort',7)" style="cursor: pointer;">操作系统</th>
+     <th onclick="$.sortTables.sort('tableSort',8)" style="cursor: pointer;">用户ID</th>
+     <th onclick="$.sortTables.sort('tableSort',9)" style="cursor: pointer;">用户名称</th>
+     <th onclick="$.sortTables.sort('tableSort',10)" style="cursor: pointer;">CPU</th>
+     <th onclick="$.sortTables.sort('tableSort',11)" style="cursor: pointer;">CPU使用率(%)/月</th>
+     <th onclick="$.sortTables.sort('tableSort',12)" style="cursor: pointer;">MEMORY</th>
+     <th onclick="$.sortTables.sort('tableSort',13)" style="cursor: pointer;">Memory使用率(%)/月</th>
+     <th onclick="$.sortTables.sort('tableSort',14)" style="cursor: pointer;">磁盘</th>
+     <th onclick="$.sortTables.sort('tableSort',15)" style="cursor: pointer;">磁盘总量(G)</th>
+     <th onclick="$.sortTables.sort('tableSort',16)" style="cursor: pointer;">创建时间</th>
+    </tr>
+   </thead>
+   
+   <tbody>
+   	{% for vir in vir_machine_list%}
+    <tr>
+     <td class="checkbox"><input type="checkbox" /></td>
+     <td>{{ vir.vir_id }}</td>
+     <td>{{ vir.vir_name }}</td>
+     <td>{{ vir.vir_ip }}
+     	<div class="dropdown">
+     		<input class="dropdown-toggle" type="text" ><div class="dropdown-text"></div>
+     		<div class="dropdown-content">
+     			<a href="#" data-filter="status" data-status="active,disabled">关联网络设备</a>
+     			<a href="#" data-filter="status" data-status="active">关联应用系统</a>
+     			<a href="#" data-filter="status" data-status="disabled">关联设备名称</a>
+     			<a href="#" data-filter="status" data-status="deleted">待定</a>
+     		</div>
+     	</div>
+	 </td>
+     <td><a class="phy_name" href="#/" data-permalink="">{{ vir.belong_sys }} </a></td>	 
+     <td><a class="phy_name" href="#/" data-permalink="">{{ vir.phy_name }}</a></td>
+     <td>{{ vir.img_name }}</td>
+     <td>{{ vir.os_name }}</td>
+     <td>{{ vir.account_id }}</td>
+     <td>{{ vir.account_name }}</td>
+     <td>{{ vir.vir_cpu }}</td>
+     <td>{{ vir.vir_cpu_rate }}</td>
+     <td>{{ vir.vir_memory }}</td>
+     <td>{{ vir.vir_memory_rate }}</td>       
+     <td>{{ vir.disk_type }}</td>
+     <td>{{ vir.disk_total }}</td>    
+     <td class="time">{{ vir.create_time }}</td>
+
+     <!--<td class="operations" data-operations="">
+      <div class="user">
+       <span><a class="icon icon-right" data-tooltip="" title="" href="#" data-original-title="切换"></a></span>
+      </div></td>-->
+    </tr>
+    {% endfor %}
+   </tbody>
+  </table>
+</div>
+ 	{% if page_flag %}
+ 	{% include "page_list.html" with page=vir_machine_list  %}
+	{% endif %}
+ {% else %}
+<div class="container container-center jumbotron">
+  <div class="col-sm-4 col-sm-offset-4">
+    <div id="app" class="form-group">
+      <h3 style="color:green"><a href="/accounts/login/" >请您登陆获取更多内容</a></h3><br>
+      <!--<h4><button class="btn btn-primary"><a href="/accounts/login/" style="color:black">登录</a></button></h4>-->
+  </div>
+</div>
+
+{% endif%}
+{% endblock %}

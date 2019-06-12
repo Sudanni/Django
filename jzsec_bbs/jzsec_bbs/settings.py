@@ -10,11 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import os
+import os,sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+sys.path.insert(0,os.path.join(BASE_DIR,'main'))
+sys.path.insert(0,os.path.join(BASE_DIR,'vir_machine'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -25,7 +26,33 @@ SECRET_KEY = '7-o+b5j4(8es9mb&w%#emdm57+m@dy(8*6f2q)3(2@5my64rje'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['172.16.160.0/24','172.16.160.31','172.16.208.79','127.0.0.1']
+#django-celery
+import djcelery
+
+# CELERY STUFF
+BROKER_URL = 'redis://172.18.1.204:6379'
+CELERY_RESULT_BACKEND = 'redis://172.18.1.204:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Shanghai'
+
+
+
+
+
+#CACHE REDIS
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://172.18.1.204:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": "django"
+        }
+    }
+}
 
 
 # Application definition
@@ -39,8 +66,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'main',
+    'vir_machine',
+    'sys_app',
+    'djcelery',
 
 ]
+
 
 AUTH_USER_MODEL = 'users.User'
 MIDDLEWARE = [
@@ -58,7 +89,7 @@ ROOT_URLCONF = 'jzsec_bbs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'main/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,5 +162,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, 'img'),
-    os.path.join(BASE_DIR, ''),
+    os.path.join(BASE_DIR, 'public'),
     ]

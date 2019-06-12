@@ -1,0 +1,10 @@
+{% extends 'entry_jzsec.html' %}
+<!--block模块是修改继承html中的元素内容-->
+{% block title %}<title>修改成功</title>{% endblock %}
+{% block content%}
+<div class="container container-fluid jumbotron">
+	<p>修改成功！</p>
+	<h1><a href="/{{ backpath }}/">返回</a> </h1>
+</div>
+
+{% endblock %}

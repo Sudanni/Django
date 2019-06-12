@@ -1,0 +1,202 @@
+{% extends 'entry_jzsec.html' %}
+{% block title %}<title>版本库信息</title>{% endblock %}
+{% block div %}
+    {% include 'sys_version/secondnav.html'%}
+{% endblock %}
+{% block content %}
+<br>
+{% if request.user.is_authenticated %}
+
+<script type="text/javascript">
+    //checkbox 全选/取消全选
+    var isCheckAll = false;
+    function swapCheck() {
+      if (isCheckAll) {
+        $("input[type='checkbox']").each(function() {
+          this.checked = false;
+        });
+        isCheckAll = false;
+      } else {
+        $("input[type='checkbox']").each(function() {
+          this.checked = true;
+        });
+        isCheckAll = true;
+      }
+    }
+    function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+// Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        //导出
+function downData() {
+            var env_codes = new Array();
+            var count = 0;
+            var i = 0;
+            $("input[type='checkbox']:checked").each(function () {
+                env_code = $(this).parent().next().text();
+                //alert(env_code);
+                if (env_code != "") {
+                    env_codes[i++] = env_code;
+                }
+                count++;
+            });
+            if (count == 0) {
+            	alert('请选中导出项！');
+            	return false;
+            }
+            $("#downData").val(env_codes)
+            var project_code = $("#downData").val()
+            //alert(project_code);
+            $.ajax({
+                type: 'POST',
+                url: '/vir_list/process_export_excel/',
+                dataType: 'text',
+                data: {'project_code': project_code},
+                beforeSend: function (xhr, settings) {
+                    var csrftoken = getCookie('csrftoken');
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function (text) {
+                    var url = '/vir_list/download/' + text;
+                    window.location.href = url;
+                },
+                error: function () {
+                    alert('导出失败');
+                }
+            });
+
+        }
+</script>
+<script type="text/javascript">
+function deleteitem(id){
+        var post_data = {
+                'id': id
+            }
+        //alert("为什么呢");
+        if (window.confirm("确定删除所选记录？")) {
+                $.ajax({
+                    type: "post",
+                    url: '/ver_repostory/delete/', //要自行删除的action
+                    data: post_data,
+                    dataType: 'json',
+                    success: function (data) {
+                            alert(data["status"]);
+                            //window.location.reload(true);
+                            var url = '/ver_repostory/'
+                            return location.assign(url);
+                        }
+                });
+            }
+         else {
+            alert("删除失败!");
+        }  } 
+</script>
+
+<div class="toolbar table-toolbar" id="align">	
+	<div class="form-search" >
+		<form action="/ver_repostory/query_rep/?" method="GET">
+			<a class="btn btn-primary" href="/ver_repostory/add/"><span class="text">添加</span></a>
+			<button type="submit" class="btn btn-primary" style="color: yellow"><span class="text">搜索</span></button>
+			<span class="text">系统名称:</span><input type="search" placeholder=" " name="sys_name" value="{{ sys_name}}" style="color: grey">
+		</form>
+	</div>
+	<div class="pagination" >
+		<span class="pages">合计 : {{ ver_repostory_count }}&nbsp;&nbsp;</span>
+		<span class="per-page">每页{{ page_count }}</span>
+		<!--<div class="select-con">
+			<select class="dropdown-select" name="limit">
+				<option value="10">10</option><option value="20">20</option>
+				<option value="50">50</option><option value="100" selected="">100</option>
+			</select>
+	</div>-->
+	</div>
+	<div class="toolbar table-toolbar btn_right">
+		<input id="downData" type="text" name="project_code" style="display:none"/>
+        <button id="export" type="onclick" class="btn-primary btn btn_right" onclick="downData();">
+            <span class="glyphicon glyphicon-share" aria-hidden="true"></span>导出数据
+        </button>
+	</div>
+
+</div>
+<br>
+
+<div class="toolbar table-toolbar overflow" id="margin">
+ <table class="table table-hover form-group hovertable" vcontext="subusers.table" id="tableSort">
+   <thead>
+    <tr>
+     <th class="checkbox" width="50"><input type="checkbox" onclick="swapCheck()" /></th>
+     <th onclick="$.sortTables.sort('tableSort',1)" style="cursor: pointer;">系统名称</th>
+     <th>模块名称</th>
+     <th>发布程序名</th>
+     <th>版本</th>
+     <th>对应版本存放路径</th>
+     <th>MD5</th>
+     <th>备注信息</th>
+     <th>操作</th>
+     <!--<th onclick="$.sortTable.sort('tableSort',16)" style="cursor: pointer;">创建时间</th>-->
+    </tr>
+   </thead>
+   
+   <tbody>
+   	{% for item in ver_repostory_list %}
+    <tr>
+     <td class="checkbox" ><input type="checkbox" /></td>
+     <td>{{ item.sys_name }}</td>
+     <td>{{ item.mod_name }}</td>
+     <td>{{ item.process_name }}</td>
+     <td><a class="phy_name" href="#/" data-permalink="">{{ item.version }} </a></td>	 
+     <td><a class="phy_name" href="#/" data-permalink="">{{ item.process_path }}</a></td>
+     <td>{{ item.md5 }}</td>
+     <td>{{ item.remark }}</td>   
+     <td>
+        <strong><a href="{% url 'edit_sys' item.id %}" >修改</a></strong>
+        <strong>
+            {% csrf_token %}
+            <a type="button" class="btn btn-danger" onclick="deleteitem('{{ item.id }}')">
+                <span class="glyphicon glyphicon-remove">删除</span>
+            </a>
+        </strong> 
+    </td>
+     <!--<td class="time">{{ vir.create_time }}</td>-->
+
+     <!--<td class="operations" data-operations="">
+      <div class="user">
+       <span><a class="icon icon-right" data-tooltip="" title="" href="#" data-original-title="切换"></a></span>
+      </div></td>-->
+    </tr>
+    {% endfor %}
+   </tbody>
+  </table>
+</div>
+ 	{% if page_flag %}
+ 	{% include "page_list.html" with page=ver_repostory_list  %}
+	{% endif %}
+ {% else %}
+<div class="container container-center jumbotron">
+  <div class="col-sm-4 col-sm-offset-4">
+    <div id="app" class="form-group">
+      <h3 style="color:green"><a href="/accounts/login/" >请您登陆获取更多内容</a></h3><br>
+      <!--<h4><button class="btn btn-primary"><a href="/accounts/login/" style="color:black">登录</a></button></h4>-->
+  </div>
+</div>
+
+{% endif%}
+{% endblock %}
