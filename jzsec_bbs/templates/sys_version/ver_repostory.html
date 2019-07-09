@@ -112,10 +112,11 @@ function deleteitem(id){
 
 <div class="toolbar table-toolbar" id="align">	
 	<div class="form-search" >
-		<form action="/ver_repostory/query_rep/?" method="GET">
+		<form action="/ver_repostory/query/?" method="GET">
 			<a class="btn btn-primary" href="/ver_repostory/add/"><span class="text">添加</span></a>
 			<button type="submit" class="btn btn-primary" style="color: yellow"><span class="text">搜索</span></button>
-			<span class="text">系统名称:</span><input type="search" placeholder=" " name="sys_name" value="{{ sys_name}}" style="color: grey">
+			<span class="text">系统名称:</span><input type="search" placeholder=" " name="sys_name" value="{{ sys_name }}" style="color: grey">
+      <span class="text">模块名称:</span><input type="search" placeholder=" " name="mod_name" value="{{ mod_name }}" style="color: grey">
 		</form>
 	</div>
 	<div class="pagination" >
@@ -167,11 +168,11 @@ function deleteitem(id){
      <td>{{ item.md5 }}</td>
      <td>{{ item.remark }}</td>   
      <td>
-        <strong><a href="{% url 'edit_sys' item.id %}" >修改</a></strong>
+        <strong><a type="button" class="btn btn-primary" href="{% url 'edit_sys' item.id %}" >修改</a></strong>
         <strong>
             {% csrf_token %}
             <a type="button" class="btn btn-danger" onclick="deleteitem('{{ item.id }}')">
-                <span class="glyphicon glyphicon-remove">删除</span>
+                删除
             </a>
         </strong> 
     </td>

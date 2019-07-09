@@ -27,3 +27,15 @@ class SerVersionForm(forms.ModelForm):
             field = self.base_fields[field_name]
             field.widget.attrs.update({'class': 'form-control'})
 
+class OpeDirectorForm(forms.ModelForm):
+    class Meta:
+        model = ope_director
+        fields = "__all__"
+    def __init__(self, *args, **kwargs):
+        #  继承父类，后重写自己的类
+        super(OpeDirectorForm, self).__init__(*args, **kwargs)
+
+        for field_name in self.base_fields:   # 遍历每一个字段
+            field = self.base_fields[field_name]
+            field.widget.attrs.update({'class': 'form-control'})
+

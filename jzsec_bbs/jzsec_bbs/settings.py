@@ -26,7 +26,7 @@ SECRET_KEY = '7-o+b5j4(8es9mb&w%#emdm57+m@dy(8*6f2q)3(2@5my64rje'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['172.16.160.0/24','172.16.160.31','172.16.208.79','127.0.0.1']
+ALLOWED_HOSTS = ['172.16.160.0/24','172.16.160.31','172.16.208.79','127.0.0.1','172.16.208.64']
 #django-celery
 import djcelery
 

@@ -1,0 +1,51 @@
+{% extends 'entry_jzsec.html' %}
+{% block title %}<title>添加系统负责人信息</title>{% endblock %}
+{% block content %}
+<br>
+{% if request.user.is_authenticated %}
+<div class="container container-fluid jumbotron">
+<form  action="/ope_director/add/" method="post" name="add_opedirector">
+  {% csrf_token %}
+  {{ form.as_table }}
+  <br>
+
+  <!--<table class="table table-hover form-group"  rules="none">
+    <tbody>
+          <tr>
+            <td>帖子名称</td>
+            <td><input type="text" name="name" class="form-control" required="required"></td>
+          </tr>
+          <tr>
+            <td>用户姓名</td>
+            <td><input style="color:green"  class="form-control" value="{{ request.user.name }}" required="required"></td>
+          </tr>
+          <tr>
+            <td>用户ID</td>
+            <td><input style="color:green"  name="user_id" class="form-control" required="required" ></td>
+          </tr>          
+          <tr>
+            <td>帖子编号</td>
+            <td><input style="color:green" class="form-control" value="{{ blog_id }}" required="required"></td>
+          </tr>
+          <tr>
+            <td>帖子内容</td>
+            <td><textarea style="color:green;width: 964px; height: 400px; text-align: left;" name="content" class="form-control" required="required"></textarea></td>
+          </tr>                  
+        </tbody>
+  </table>-->
+  <P><input name="submit" type="submit" id="submit" tabindex="5" value="创建" class="btn-primary btn" />&nbsp;&nbsp;&nbsp;&nbsp; <button class="btn btn_right"><a href="/ope_director/" style="color:black">取消</a></button></P>
+</form>
+
+
+</div>
+{% else %}
+<div class="container container-center jumbotron">
+  <div class="col-sm-4 col-sm-offset-4">
+    <div id="app" class="form-group">
+      <h3 style="color:green"><a href="/accounts/login/" >请您登陆获取更多内容</a></h3><br>
+      <!--<h4><button class="btn btn-primary"><a href="/accounts/login/" style="color:black">登录</a></button></h4>-->
+  </div>
+</div>
+
+{% endif%}
+{% endblock %}

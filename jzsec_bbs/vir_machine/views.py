@@ -44,13 +44,13 @@ def query_by_field(request,vip_ip="",phy_name="",page_flag=False):
         if vir_ip == "" and phy_name == "":
             return HttpResponseRedirect("/vir_list/")
         elif vir_ip == "" and phy_name != "":
-            vir_machine_list = vir_machine.objects.filter(phy_name=phy_name)
+            vir_machine_list = vir_machine.objects.filter(phy_name__icontains=phy_name)
             vir_machine_count = vir_machine_list.count()
         elif vir_ip != "" and phy_name == "":
-            vir_machine_list = vir_machine.objects.filter(vir_ip=vir_ip)
+            vir_machine_list = vir_machine.objects.filter(vir_ip__icontains=vir_ip)
             vir_machine_count = vir_machine_list.count()
         else:
-            vir_machine_list = vir_machine.objects.filter(phy_name=phy_name, vir_ip=vir_ip)
+            vir_machine_list = vir_machine.objects.filter(phy_name__icontains=phy_name, vir_ip__icontains=vir_ip)
             vir_machine_count = vir_machine_list.count()
 
 

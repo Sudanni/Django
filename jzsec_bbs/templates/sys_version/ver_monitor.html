@@ -149,6 +149,23 @@ function deleteitem(id){
     content:icon;
     icon:url(diff.png);
   }
+
+  a:link {
+  font-size: 12px;
+  color: #000000;
+  text-decoration: none;
+    }
+  a:visited {
+   font-size: 12px;
+   color: #000000;
+   text-decoration: none;
+  }
+  a:hover {
+   font-size: 12px;
+   color: #999999;
+   text-decoration: underline;
+  }
+  
 </style>
 <div class="toolbar table-toolbar overflow" id="margin">
  <table class="table table-hover form-group hovertable" vcontext="subusers.table" id="tableSort">
@@ -158,9 +175,9 @@ function deleteitem(id){
      <th onclick="$.sortTables.sort('tableSort',1)" style="cursor: pointer;">系统名称</th>
      <th onclick="$.sortTables.sort('tableSort',2)" style="cursor: pointer;">系统负责人</th>
      <th onclick="$.sortTables.sort('tableSort',3)" style="cursor: pointer;">IP</th>
-     <th>发布程序名</th>
+     <th>模块名称</th>
      <th id="ser_ver">服务器版本</th>
-     <th id="rep_ver">指定版本</th>
+     <th id="rep_ver">版本库版本</th>
      <th>描述</th>
      <!--<th onclick="$.sortTable.sort('tableSort',16)" style="cursor: pointer;">创建时间</th>-->
     </tr>
@@ -170,32 +187,32 @@ function deleteitem(id){
    	{% for item in ver_monitor_list %}
     <tr>
 
-     {% if item.4 == Null or item.6 == Null %}
+     {% if item.5 == Null or item.7 == Null %}
      <td id="icon_mis"><img src="/static/img/miss.ico" alt="缺失" style="width: 25px;"></td>
      <td>{{ item.0 }}</td>
      <td>{{ item.1 }}</td>
      <td>{{ item.2 }}</td>
-     <td><a class="phy_name" href="#/" data-permalink="">{{ item.3 }} </a></td>  
-     <td style="background: red"><a class="phy_name" href="#/" data-permalink="">{{ item.4 }}</a></td>
-     <td style="background: red">{{ item.6 }}</td>
+     <td>{{ item.3 }}</td>  
+     <td style="background: red"><a href="/ser_version/query/?sys_name={{ item.0 }}&mod_name={{ item.3 }}" data-permalink="">{{ item.4 }}</a></td>
+     <td style="background: red"><a href="/ver_repostory/query/?sys_name={{ item.0 }}&mod_name={{ item.3 }}" data-permalink="">{{ item.6 }}</a></td>
      <td id="desc" class="mis"><strong>缺失</strong></td>
-     {% elif item.4 == item.6 %}
+     {% elif item.5 == item.7 %}
      <td><img src="/static/img/unify.ico" alt="版本一致" style="width: 25px;"></td>
      <td>{{ item.0 }}</td>
      <td>{{ item.1 }}</td>
      <td>{{ item.2 }}</td>
-     <td><a class="phy_name" href="#/" data-permalink="">{{ item.3 }} </a></td>  
-     <td style="background: green">{{ item.4 }}</td>
-     <td style="background: green">{{ item.6 }}</td>
+     <td>{{ item.3 }}</td>  
+     <td style="background: green"><a href="/ser_version/query/?sys_name={{ item.0 }}&mod_name={{ item.3 }}" data-permalink="">{{ item.4 }}</a></td>
+     <td style="background: green"><a href="/ver_repostory/query/?sys_name={{ item.0 }}&mod_name={{ item.3 }}" data-permalink="">{{ item.6 }}</a></td>
      <td id="desc" class="unify" style="color:green"><strong>一致</strong></td>
      {% else %}
      <td id="icon_diff"><img src="/static/img/diff.ico" alt="版本不一致" style="width: 25px;"></td>
      <td>{{ item.0 }}</td>
      <td>{{ item.1 }}</td>
      <td>{{ item.2 }}</td>
-     <td><a class="phy_name" href="#/" data-permalink="">{{ item.3 }} </a></td>  
-     <td style="background: yellow"><a class="phy_name" href="#/" data-permalink="">{{ item.4 }}</a></td>
-     <td style="background: yellow">{{ item.6 }}</td>
+     <td>{{ item.3 }}</td>  
+     <td style="background: yellow"><a href="/ser_version/query/?sys_name={{ item.0 }}&mod_name={{ item.3 }}" data-permalink="">{{ item.4 }}</a></td>
+     <td style="background: yellow"><a href="/ver_repostory/query/?sys_name={{ item.0 }}&mod_name={{ item.3 }}" data-permalink="">{{ item.6 }}</a></td>
      <td id="desc" class="different" style="color:red"><strong>不一致</strong></td>
      {% endif %}
      <!--<td class="time">{{ vir.create_time }}</td>-->
@@ -210,7 +227,7 @@ function deleteitem(id){
   </table>
 </div>
  	{% if page_flag %}
- 	{% include "page_list.html" with page=ver_repostory_list  %}
+ 	{% include "page_list.html" with page=ver_monitor_list  %}
 	{% endif %}
  {% else %}
 <div class="container container-center jumbotron">

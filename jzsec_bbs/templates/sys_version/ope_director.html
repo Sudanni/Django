@@ -1,8 +1,5 @@
 {% extends 'entry_jzsec.html' %}
-{% block title %}<title>服务器版本信息</title>{% endblock %}
-{% block div %}
-  {% include 'sys_version/secondnav.html'%}
-{% endblock %}
+{% block title %}<title>系统负责人</title>{% endblock %}
 {% block content %}
 <br>
 {% if request.user.is_authenticated %}
@@ -94,13 +91,13 @@ function deleteitem(id){
         if (window.confirm("确定删除所选记录？")) {
                 $.ajax({
                     type: "post",
-                    url: '/ser_version/delete/', //要自行删除的action
+                    url: '/ope_director/delete/', //要自行删除的action
                     data: post_data,
                     dataType: 'json',
                     success: function (data) {
                             alert(data["status"]);
                             //window.location.reload(true);
-                            var url = '/ser_version/'
+                            var url = '/ope_director/'
                             return location.assign(url);
                         }
                 });
@@ -112,15 +109,15 @@ function deleteitem(id){
 
 <div class="toolbar table-toolbar" id="align">	
 	<div class="form-search" >
-		<form action="/ser_version/query/?" method="GET">
-			<a class="btn btn-primary" href="/ser_version/add/"><span class="text">添加</span></a>
+		<form action="/ope_director/query_director/?" method="GET">
+			<a class="btn btn-primary" href="/ope_director/add/"><span class="text">添加</span></a>
 			<button type="submit" class="btn btn-primary" style="color: yellow"><span class="text">搜索</span></button>
 			<span class="text">系统名称:</span><input type="search" placeholder=" " name="sys_name" value="{{ sys_name}}" style="color: grey">
-      <span class="text">模块名称:</span><input type="search" placeholder=" " name="mod_name" value="{{ mod_name }}" style="color: grey">
+      <span class="text">系统负责人:</span><input type="search" placeholder=" " name="ope_director" value="{{ ope_director }}" style="color: grey">
 		</form>
 	</div>
 	<div class="pagination" >
-		<span class="pages">合计 : {{ ser_version_count }}&nbsp;&nbsp;</span>
+		<span class="pages">合计 : {{ count }}&nbsp;&nbsp;</span>
 		<span class="per-page">每页{{ page_count }}</span>
 		<!--<div class="select-con">
 			<select class="dropdown-select" name="limit">
@@ -144,17 +141,15 @@ function deleteitem(id){
    <thead>
     <tr>
      <th class="checkbox" width="50"><input type="checkbox" onclick="swapCheck()" /></th>
-     <th onclick="$.sortTables.sort('tableSort',1)" style="cursor: pointer;">系统名称</th>
-     <th>运行负责人</th>
-     <th>模块名称</th>
-     <th>IP</th>
-     <th>发布程序名称</th>
-     <th width="100">版本</th>
-     <th>版本存放PATH</th>
-     <th>配置信息PATH</th>
-     <th>日志信息PATH</th>
-     <th>其他信息PATH</th>
-     <th>MD5</th>
+     <th onclick="$.sortTables.sort('tableSort',1)" style="cursor: pointer;">类型</th>
+     <th onclick="$.sortTables.sort('tableSort',2)" style="cursor: pointer;">系统名称</th>
+     <th onclick="$.sortTables.sort('tableSort',3)" style="cursor: pointer;">系统负责人</th>
+     <th>备岗</th>
+     <th>第二备岗</th>
+     <th>厂商</th>
+     <th>联系人</th>
+     <th>联系方式</th>
+     <th>是否有文件备份</th>
      <th>备注</th>
      <th>操作</th>
      <!--<th onclick="$.sortTable.sort('tableSort',16)" style="cursor: pointer;">创建时间</th>-->
@@ -162,26 +157,24 @@ function deleteitem(id){
    </thead>
    
    <tbody>
-   	{% for item in ser_version_list %}
+   	{% for item in ope_director_list %}
     <tr>
-     <td class="checkbox"><input type="checkbox" /></td>
+     <td class="checkbox" ><input type="checkbox" /></td>
+     <td>{{ item.type }}</td>
      <td>{{ item.sys_name }}</td>
      <td>{{ item.ope_director }}</td>
-     <td>{{ item.mod_name }}</td>
-     <td><a class="phy_name" href="#/" data-permalink="">{{ item.ser_ip }} </a></td>	 
-     <td><a class="phy_name" href="#/" data-permalink="">{{ item.process_name }}</a></td>
-     <td>{{ item.version }}</td>
-     <td>{{ item.process_path }}</td>
-     <td>{{ item.conf_path }}</td> 
-     <td>{{ item.log_path }}</td> 
-     <td>{{ item.change_path }}</td>   
-     <td>{{ item.md5 }}</td>
+     <td><a class="phy_name" href="#/" data-permalink="">{{ item.second_director }} </a></td>	 
+     <td><a class="phy_name" href="#/" data-permalink="">{{ item.third_director }}</a></td>
+     <td>{{ item.changshang }}</td>
+     <td>{{ item.contacts }}</td>
+     <td>{{ item.tel_phone }}</td>
+     <td>{{ item.backup_path }}</td>        
      <td>{{ item.remark }}</td> 
      <td>
-        <strong><a type="button" class="btn btn-primary" href="{% url 'edit_ser' item.id %}" >修改</a></strong>
+        <strong><a type="button" class="btn btn-primary" href="{% url 'edit_director' item.sys_name %}" >修改</a></strong>
         <strong>
             {% csrf_token %}
-            <a type="button" class="btn btn-danger" onclick="deleteitem('{{ item.id }}')">
+            <a type="button" class="btn btn-danger" onclick="deleteitem('{{ item.sys_name }}')">
                 删除
             </a>
         </strong> 
@@ -198,7 +191,7 @@ function deleteitem(id){
   </table>
 </div>
  	{% if page_flag %}
- 	  {% include "page_list.html" with page=ser_version_list  %}
+ 	{% include "page_list.html" with page=ope_director_list  %}
 	{% endif %}
  {% else %}
 <div class="container container-center jumbotron">

@@ -28,7 +28,7 @@
     background: yellow;	
     }
 
-    h1 {
+    h2 {
    	color:black;
     font-weight:bold;
     line-height:50px;
@@ -90,14 +90,14 @@
 		<input type="button" class="add btn-primary btn" value="添加系统" onclick="add()">
 	</div>
 	{% for item in ver_monitor_list %}
-	{% if item.4 == item.6 %}
+	{% if item.5 == item.7 %}
 	<div class="first" id='{{ item.0 }}'>
-		<a id="sys_url" href="/ver_monitor/query?sys_name={{ item.0 }}"><h1 id='sys_name'>{{ item.0 }}</h1></a>
+		<a id="sys_url" href="/ver_monitor/query_rep?sys_name={{ item.0 }}"><h2 id='sys_name'>{{ item.0 }}</h2></a>
 		<p>状态:正常</p>
 	</div>
 	{% else %}
 		<div class="second" id='{{ item.0 }}'>
-		<a id="sys_url" href="/ver_monitor/query?sys_name={{ item.0 }}"><h1 id='sys_name'>{{ item.0 }}</h1></a>
+		<a id="sys_url" href="/ver_monitor/query_rep?sys_name={{ item.0 }}"><h2 id='sys_name'>{{ item.0 }}</h2></a>
 		<p>状态:异常</p>
 	</div>
 	{% endif %}
@@ -105,7 +105,7 @@
 		<script type="text/javascript"> 
 		$(function(){
 			var sys_name = $("#sys_name2");
-			var url = "/ver_monitor/query?sys_name=" + sys_name.text();
+			var url = "/ver_monitor/query_rep?sys_name=" + sys_name.text();
 			var data = {'href':url};
 			$("#sys_url2").attr(data);
 		});
