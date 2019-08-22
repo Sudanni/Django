@@ -2,6 +2,57 @@
 Django web project
 
 配置库管理系统
+#环境需求（应用于数据库部署在一起）
+centos7 2C4G 
+python >=3.6
+mysql >= 5.56
+nginx >=1.10.1
+
+#框架
+BVDN=bootstrap+vue+django+nginx
+
+#拉取代码
+git clone https://github.com/Sudanni/Django.git
+
+#安装模块
+pip install -r requirements.txt
+
+#配置数据库信息
+vim settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'jzsec_bbs',
+        'HOST': '172.18.1.204',
+        'PORT': 3306,
+        'USER': 'django',
+        'PASSWORD': '****',
+        'OPTIONS':{
+            'init_command':"SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset':'utf8mb4'}
+    }
+}
+
+#构架数据库模型
+python manage.py makemigrations #创建数据模型类
+python manage.py migrate        #执行数据模型规则
+
+
+#启动服务
+python manage.py runserver 0.0.0.0:8888
+
+#创建超级用户
+python manage.py createsuperuser
+
+#web服务代理
+yum -y install nginx 
+
+
+
+
+
+
+
 
 #框架
 BVDN=bootstrap+vue+django+nginx

@@ -1,6 +1,6 @@
 celery==3.1.25
 celery-with-redis==3.0
-django-celery	
+django-celery
 django==2.2.1
 psutil
 pymysql
@@ -8,3 +8,8 @@ mysqlclient
 pandas
 numpy
 django-redis
+xlwt
+django-appconf
+ansible
+pywinrm>=0.1.1
+django-users2
