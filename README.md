@@ -47,13 +47,7 @@ python manage.py createsuperuser
 #web服务代理
 yum -y install nginx 
 
-
-
-
-
-
-
-
+-----------------------------------------------------------
 #框架
 BVDN=bootstrap+vue+django+nginx
 #web项目开发学习
